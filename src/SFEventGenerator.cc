@@ -11,8 +11,6 @@
 
 #include "global.hh"
 using namespace CLHEP;
-SFEventGenerator* SFEventGenerator::_singleton = 0;
-
 SFEventGenerator::SFEventGenerator():_infile(""),_instream("",std::ifstream::in) {
 	_mode=GUN;
 	G4int Nparticle = 1 ;
@@ -22,7 +20,6 @@ SFEventGenerator::SFEventGenerator():_infile(""),_instream("",std::ifstream::in)
 
 SFEventGenerator::~SFEventGenerator() {
 	delete _pGun ;
-	this->_singleton=0;
 }
 
 void SFEventGenerator::generateEventFromPhaseSpace(G4Event *E)
@@ -31,18 +28,29 @@ void SFEventGenerator::generateEventFromPhaseSpace(G4Event *E)
 	TLorentzVector target;
 	//TODO: Determine by config file
 	// Declare the supported options.
-		G4int PDGbeam,PDGtarget;
-	Double_t T_beam;
+	G4int PDGbeam,PDGtarget;
+	G4double T_beam;
 	try{
-		PDGbeam=vm["Generator.beam_particle"].as<int>();
-		PDGtarget=vm["Generator.target_particle"].as<int>();
-		T_beam = vm["Generator.beam_energy"].as<double>();
+		if(vm.count("generator.beam_particle"))
+			PDGbeam=vm["generator.beam_particle"].as<int>();
+		else
+			throw std::invalid_argument("beam particle not set.");
+		if(vm.count("generator.target_particle"))
+			PDGtarget=vm["generator.target_particle"].as<int>();
+		else
+			throw std::invalid_argument("target particle not set.");
+		if(vm.count("generator.beam_energy"))
+			T_beam = vm["generator.beam_energy"].as<double>()*MeV;
+		else
+			throw std::invalid_argument("beam energy not set.");
+
 	}
-	catch(...){
+	catch(const std::exception & exc){
 		std::stringstream o;
-		o<<"Parsing of config file failed"<<G4endl;
+		o<<"Parsing of config file failed with "<<exc.what()<<G4endl;
 		G4Exception("SFEventGenerator::generateEventFromPhaseSpace", "ConfigurationError", FatalException,
 				o.str().c_str());
+
 	}
 	G4ParticleDefinition * beam_particle=G4ParticleTable::GetParticleTable()->FindParticle(PDGbeam);
 	G4ParticleDefinition * target_particle=G4ParticleTable::GetParticleTable()->FindParticle(PDGtarget);
@@ -75,32 +83,33 @@ void SFEventGenerator::generateEventFromPhaseSpace(G4Event *E)
 		G4ThreeVector pscattered_3(pscattered_4.Vect().X()*GeV,pscattered_4.Vect().Y()*GeV,pscattered_4.Vect().Z()*GeV);
 
 		//Magnitude of spatial vectors
-		G4double momentum_recoil  = precoil_3.mag();
-		G4double momentum_scattered  = pscattered_3.mag();
+		//G4double momentum_recoil  = precoil_3.mag();
+		//G4double momentum_scattered  = pscattered_3.mag();
 
 
 		//Polar angle for deuteron in lab-frame (degrees)
 		G4double th_scattered  = pscattered_3.getTheta();
 		//Polar angle for proton in lab-frame (degrees)
-		G4double th_recoil  = precoil_3.getTheta();
+		//G4double th_recoil  = precoil_3.getTheta();
 
-		G4double phi_scattered = pscattered_3.getPhi();
-		G4double phi_recoil = precoil_3.getPhi();
+		//G4double phi_scattered = pscattered_3.getPhi();
+		//G4double phi_recoil = precoil_3.getPhi();
 
 		//Set angular cut in lab-frame
-		if(th_scattered > 3*deg && th_scattered < 180*deg){ // continue;
+		if(true){ // continue;
 
 			//Boost momentum of deuteron from lab-sytem to cm-system.
 			TVector3 CMv = W.BoostVector();     // in case beam simulation
 			pscattered_4.Boost(-CMv);          // in case beam simulation
 			//retrieve polar scattering angle for deuteron in cm-frame
-			Double_t CM_theta_scattered = pscattered_4.Theta();
+			//Double_t CM_theta_scattered = pscattered_4.Theta();
 
 
 			//TODO: Implement Hit or Miss
 			//
 			if(false) continue;
 			else {
+
 				this->_pGun->SetParticleDefinition(beam_particle);
 				this->_pGun->SetParticleMomentum(pscattered_3);
 				this->_pGun->GeneratePrimaryVertex(E);
@@ -151,13 +160,13 @@ void SFEventGenerator::generateEventFromInput(G4Event *E)
 
 	_instream >> iev >> part1 >> part2 >> pmom1 >> pmom2 >> theta1  >> theta2 >> phi1 >> phi2>>vx>>vy>>vz>>xp>>yp;
 	try{
-		Analysis::GetInstance()->GetObject<TNtuple>("GeneratorInfo")->Fill(pmom1,pmom2,phi1,phi2,theta1,theta2,vx,vy,vz,xp,yp);
+		Analysis::Instance()->GetObject<TNtuple>("GeneratorInfo")->Fill(pmom1,pmom2,phi1,phi2,theta1,theta2,vx,vy,vz,xp,yp);
 	}
 	catch(myG4Exception& exc){
 		//If object is not found, book it and try again.
 		if(exc.getExceptionCode()=="ObjectNotFound"){
-			Analysis::GetInstance()->BookObject<TNtuple>("GeneratorInfo","GeneratorInfo","pmom1:pmom2:phi1:phi2:theta1:theta2:vx:vy:vz:xp:yp");
-			Analysis::GetInstance()->GetObject<TNtuple>("GeneratorInfo")->Fill(pmom1,pmom2,phi1,phi2,theta1,theta2,vx,vy,vz,xp,yp);
+			Analysis::Instance()->BookObject<TNtuple>("GeneratorInfo","GeneratorInfo","pmom1:pmom2:phi1:phi2:theta1:theta2:vx:vy:vz:xp:yp");
+			Analysis::Instance()->GetObject<TNtuple>("GeneratorInfo")->Fill(pmom1,pmom2,phi1,phi2,theta1,theta2,vx,vy,vz,xp,yp);
 		}
 		//If it is something else, rethrow (which, in geant4 is not an exception, but a function *yik*)
 		else
