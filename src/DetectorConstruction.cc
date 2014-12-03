@@ -1,53 +1,73 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+// $Id$
+//
+/// \file DetectorConstruction.cc
+/// \brief Implementation of the DetectorConstruction class
+
 #include "DetectorConstruction.hh"
 
-//***** include basic geometry classes
-#include "G4Box.hh"
-#include "G4Tubs.hh"
-#include "G4Cons.hh"
-#include "G4Para.hh"
-#include "G4Trd.hh"
-#include "G4Sphere.hh"
-#include "G4Orb.hh"
-#include "G4CutTubs.hh"
-#include "G4Torus.hh"
-#include "G4Polyhedra.hh"
-//***** End of include basic geometry classes
-
-#include "G4Polycone.hh"
-#include "G4SubtractionSolid.hh"
 #include "G4RunManager.hh"
-#include "TMath.h"
+#include "G4NistManager.hh"
+#include "G4Box.hh"
+#include "G4Cons.hh"
+#include "G4Orb.hh"
+#include "G4Tubs.hh"
+#include "G4Sphere.hh"
+#include "G4Trd.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
-#include "G4PVReplica.hh"
-#include "G4PVParameterised.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4VisAttributes.hh"
+#include "G4SDManager.hh"
+#include "G4MultiFunctionalDetector.hh"
+#include "G4VPrimitiveScorer.hh"
+#include "G4PSEnergyDeposit.hh"
+#include "G4SubtractionSolid.hh"
+#include "DetectorMessenger.hh"
+
 
 #include "G4GeometryManager.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4SolidStore.hh"
+// Visualization attributes
+static G4Color
+red(1.0,0.0,0.0),
+yellow(1.0,1.0,0.0),
+green(0.0,1.0,0.0),
+blue(0.0,0.0,1.0),
+brown(0.4,0.4,0.1),
+white(1.0,1.0,1.0),
+metal(204/255., 204/255, 255/255.),
+lblue(153/255., 153/255., 255/255.),
+lgreen(153/255. ,255/255. ,153/255.);
 
-
-#include "G4VisAttributes.hh"
-#include "G4Colour.hh"
-#include "G4ios.hh"
-#include "G4NistManager.hh"
-#include "G4OpticalSurface.hh"
-#include "G4LogicalBorderSurface.hh"
-#include "G4OpBoundaryProcess.hh"
-#include "G4SDManager.hh"
-#include "CaloSensitiveDetector.hh"
-#include "G4VPrimitiveScorer.hh"
-#include "G4PSEnergyDeposit.hh"
-
-#include "TrackerSensitiveDetector.hh"
-#include "DetectorMessenger.hh"
-#include "G4GDMLParser.hh"
-#include "TNtuple.h"
-#include "Analysis.hh"
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "global.hh"
-using namespace CLHEP;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Visualization attributes
 static G4Color
@@ -73,7 +93,6 @@ DetectorConstruction::DetectorConstruction()
 }
 
 
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()
@@ -91,13 +110,11 @@ void DetectorConstruction::UpdateGeometry()
 	G4RunManager::GetRunManager()->GeometryHasBeenModified();
 	G4cout<<"done!"<<G4endl;
 }
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
 
-	// World
 	// Get nist material manager
 	G4NistManager* nist = G4NistManager::Instance();
 	// Option to switch on/off checking of volumes overlaps
@@ -141,6 +158,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4Box* sourcehull_solid=new G4Box("SourceHull",source_sizeXY/2+.5*mm,source_sizeXY/2+.5*mm,source_sizeZ/2+.5*mm);
 	G4LogicalVolume* sourcehull_logical=new G4LogicalVolume(sourcehull_solid,nist->FindOrBuildMaterial("G4_Al"),"Source");
 	new G4PVPlacement(0,G4ThreeVector(0,0,source_sizeZ/2+0.5*mm),sourcehull_logical,"Source",logicWorld,false,0,checkOverlaps);
+
 
 	G4Box* source_solid=new G4Box("Source",source_sizeXY/2,source_sizeXY/2,source_sizeZ/2);
 	G4LogicalVolume* source_logical=new G4LogicalVolume(source_solid,nist->FindOrBuildMaterial("G4_Na"),"Source");
@@ -193,6 +211,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double shield_thick=1*mm;
 	G4Tubs* shield_solid=new G4Tubs("Scintillator",0*mm,scint_radius,scint_length/2,0*deg,360*deg);
 	G4LogicalVolume* shield_logical=new G4LogicalVolume(shield_solid,nist->FindOrBuildMaterial("G4_Al"),"ScintillatorShielding");
+
 	new G4PVPlacement(scint_rotation1,G4ThreeVector(scint_length/2+75*mm,0,0),shield_logical,"ScintillatorShielding",logicWorld,false,0,checkOverlaps);
 	new G4PVPlacement(scint_rotation2,G4ThreeVector(scint_length/2+75*mm,0,0).rotateZ(fPMTAngle),shield_logical,"ScintillatorShielding",logicWorld,false,1,checkOverlaps);
 
@@ -215,7 +234,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4VisAttributes* CollVisAttr=new G4VisAttributes(metal);
 	coll_logical->SetVisAttributes(CollVisAttr);
 
-
 	return physiWorld;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -223,9 +241,10 @@ void DetectorConstruction::ConstructSDandField() {
 	//------------------------------------------------
 	// Sensitive detectors
 	//------------------------------------------------
-	// Create a new sensitive detector
+
 	if(myDetector)
 		delete myDetector;
 	myDetector = new CaloSensitiveDetector("PMT");
-	//SetSensitiveDetector("Scintillator",myDetector);
+	SetSensitiveDetector("Scintillator",myDetector);
 }
+

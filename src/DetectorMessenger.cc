@@ -35,7 +35,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* detc):dc(detc) {
 
 }
 void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
-
 	if(command==OpeningAngleCmd){
 		dc->SetOpeningAngle(OpeningAngleCmd->GetNewDoubleValue(newValue));
 	}
