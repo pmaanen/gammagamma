@@ -80,6 +80,7 @@ DetectorConstruction::DetectorConstruction()
 {
 	dcMessenger=new DetectorMessenger(this);
 	fPMTAngle=180*deg;
+	logicScintillator=0;
 	fOpeningAngle=2.5*deg;
 	source_sizeXY=5*mm;
 	source_sizeZ=5*mm;
@@ -212,14 +213,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 	G4Tubs* scint_solid=new G4Tubs("Scintillator",0*mm,scint_radius-shield_thick,scint_length/2-shield_thick,0*deg,360*deg);
-	G4LogicalVolume* scint_logical=new G4LogicalVolume(scint_solid,nist->FindOrBuildMaterial("G4_POTASSIUM_IODIDE"),"Scintillator");
-	new G4PVPlacement(0,G4ThreeVector(0,0,0),scint_logical,"Scintillator",shield_logical,false,1,checkOverlaps);
+	logicScintillator=new G4LogicalVolume(scint_solid,nist->FindOrBuildMaterial("G4_POTASSIUM_IODIDE"),"Scintillator");
+	new G4PVPlacement(0,G4ThreeVector(0,0,0),logicScintillator,"Scintillator",shield_logical,false,1,checkOverlaps);
 
 	G4VisAttributes* ShieldVisAttr=new G4VisAttributes(lblue);
 	shield_logical->SetVisAttributes(ShieldVisAttr);
 
 	G4VisAttributes* ScintVisAttr=new G4VisAttributes(lgreen);
-	scint_logical->SetVisAttributes(ScintVisAttr);
+	logicScintillator->SetVisAttributes(ScintVisAttr);
 
 	G4VisAttributes* SourceVisAttr=new G4VisAttributes(red);
 	source_logical->SetVisAttributes(SourceVisAttr);
@@ -247,5 +248,5 @@ void DetectorConstruction::ConstructSDandField() {
 	if(myDetector)
 		delete myDetector;
 	myDetector = new CaloSensitiveDetector("PMT");
-	SetSensitiveDetector("Scintillator",myDetector);
+	SetSensitiveDetector(logicScintillator,myDetector);
 }

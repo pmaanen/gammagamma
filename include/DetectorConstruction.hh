@@ -52,6 +52,7 @@ private:
 	void DefineScorers();
 
 	G4VPhysicalVolume* physiWorld;
+	G4LogicalVolume* logicScintillator;
 	DetectorMessenger* dcMessenger;
 
 	G4double fPMTAngle;
