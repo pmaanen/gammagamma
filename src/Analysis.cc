@@ -48,6 +48,7 @@ Analysis::Analysis(G4bool isMaster):G4RootAnalysisManager(isMaster),_enable(fals
 	if ( isMaster ) fgMasterInstance = this;
 	fgInstance = this;
 	_analysisMessenger=new AnalysisMessenger(this);
+	this->SetVerboseLevel(0);
 }
 
 void Analysis::PrepareNewEvent(const G4Event* /*anEvent*/)

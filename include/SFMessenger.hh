@@ -24,7 +24,6 @@ private:
 	SFEventGenerator* myGenerator;
 	G4UIdirectory* gunDir;
 	G4UIcmdWithAnInteger* modeCmd;
-	G4UIcmdWithAString* fileCmd;
 };
 
 #endif /* SFMESSENGER_HH_ */

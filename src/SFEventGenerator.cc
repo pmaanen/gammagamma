@@ -10,12 +10,17 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "G4LogicalVolumeStore.hh"
 #include "G4Box.hh"
+#include "G4GeneralParticleSource.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4Box.hh"
+#include "G4IonTable.hh"
 #include "global.hh"
+#include "G4Geantino.hh"
 using namespace CLHEP;
-SFEventGenerator::SFEventGenerator() {
+SFEventGenerator::SFEventGenerator(){
 	_mode=GUN;
 	G4int Nparticle = 1 ;
-	_pGun = new G4ParticleGun(Nparticle) ;
+	_pGun = new G4ParticleGun(1) ;
 	_messenger=new SFMessenger(this);
 }
 
@@ -55,7 +60,8 @@ void SFEventGenerator::generateEventFromDecay(G4Event* E) {
 
 	G4double envSizeXY = 0;
 	G4double envSizeZ = 0;
-	G4LogicalVolume* envLV
+	/*	
+G4LogicalVolume* envLV
 	= G4LogicalVolumeStore::GetInstance()->GetVolume("Source");
 	G4Box* envBox = NULL;
 	if ( envLV ) envBox = dynamic_cast<G4Box*>(envLV->GetSolid());
@@ -68,7 +74,7 @@ void SFEventGenerator::generateEventFromDecay(G4Event* E) {
 		G4cerr << "Perhaps you have changed geometry." << G4endl;
 		G4cerr << "The gun will be placed in the center." << G4endl;
 	}
-
+	*/
 	G4double size = 1;
 	G4double x0 = size * envSizeXY * (G4UniformRand()-0.5);
 	G4double y0 = size * envSizeXY * (G4UniformRand()-0.5);
@@ -114,4 +120,3 @@ void SFEventGenerator::GeneratePrimaries(G4Event* E) {
 
 
 // eof
-

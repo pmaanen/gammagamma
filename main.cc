@@ -21,7 +21,10 @@
 #include "G4OpticalPhysics.hh"
 #include "SFEventGenerator.hh"
 #include "Analysis.hh"
-#include "PhysicsList.hh"
+
+#include "FTFP_BERT.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+
 #define MAIN
 #include "global.hh"
 namespace CLHEP {}
@@ -39,6 +42,7 @@ int main(int argc,char** argv) {
 												("general.macro_file,m", po::value<std::string>()->default_value("scripts/vis_T0.mac"), "macro file")
 												("general.batch_mode,b", po::bool_switch()->default_value(false), "batch mode")
 												("detector.geometry,g", po::value<std::string>()->default_value(""), "geometry file")
+												("general.random_seed,r", po::value<int>(), "Seed of random generator")
 												("generator.beam_particle,p", po::value<int>()->default_value(0), "PDG id of beam")
 												("generator.target_particle,t", po::value<int>()->default_value(0), "PDG id of target")
 												("generator.beam_energy,e", po::value<double>()->default_value(1),"energy of beam in MeV");
@@ -53,8 +57,11 @@ int main(int argc,char** argv) {
 	}
 	// choose the Random engine
 	RanecuEngine* theEngine=new RanecuEngine;
-	if(argc>2){
-		theEngine->setSeed(strtol(argv[2], NULL, 10));
+	if(!vm.count("general.random_seed")){
+		theEngine->setSeed(time(0));
+	}
+	else{
+		theEngine->setSeed(vm["general.random_seed"].as<int>());
 	}
 	HepRandom::setTheEngine(theEngine);
 #ifdef G4MULTITHREADED
@@ -69,13 +76,18 @@ int main(int argc,char** argv) {
 	runManager->SetUserInitialization(detector);
 
 	// set physics list
-	G4VModularPhysicsList* physicsList = new PhysicsList();
-	physicsList->SetVerboseLevel(1);
+	G4VModularPhysicsList* physicsList=new FTFP_BERT();
+	physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics());
+	physicsList->SetVerboseLevel(0);
 	runManager->SetUserInitialization(physicsList);
 
 	//User action initialization
 	runManager->SetUserInitialization(new UserActionInitialization);
-	Analysis::Instance();
+
+	// Initialize G4 kernel
+	//
+	runManager->Initialize();
+
 #ifdef G4VIS_USE
 	// Visualization manager
 	//
@@ -83,13 +95,9 @@ int main(int argc,char** argv) {
 	visManager->Initialize();
 #endif
 
-	// Initialize G4 kernel
-	//
-	runManager->Initialize();
-
 	// Get the pointer to the User Interface manager
 	//
-	G4UImanager* UImanager = G4UImanager::GetUIpointer();
+	G4UImanager* UImanager = G4UImanager::GetMasterUIpointer();
 
 
 
@@ -99,8 +107,6 @@ int main(int argc,char** argv) {
 #ifdef G4UI_USE
 		G4UIExecutive * ui = new G4UIExecutive(argc,argv);
 #ifdef G4VIS_USE
-		G4cout<<"Interactive mode"<<G4endl;
-		G4cout <<vm["general.macro_file"].as<std::string>()<<G4endl;
 		std::stringstream o;
 		o<<"/control/execute "<<vm["general.macro_file"].as<std::string>().c_str();
 		UImanager->ApplyCommand(o.str().c_str());
@@ -111,7 +117,6 @@ int main(int argc,char** argv) {
 	}
 	else           // Batch mode
 	{
-		G4cout<<"Batch mode"<<G4endl;
 		std::stringstream o;
 		o<<"/control/execute "<<vm["general.macro_file"].as<std::string>().c_str();
 		UImanager->ApplyCommand(o.str().c_str());
@@ -126,8 +131,6 @@ int main(int argc,char** argv) {
 	delete visManager;
 #endif
 	delete runManager;
-
-
 
 	return 0;
 }

@@ -46,13 +46,9 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
 	fNEvents=aRun->GetNumberOfEventToBeProcessed();
 	Analysis::Instance()->PrepareNewRun(aRun);
-	G4cout<<"----------------"<<G4endl;
-	G4cout<<Analysis::Instance()->getFilename()<<G4endl;
-	G4cout<<"----------------"<<G4endl;
 	Analysis::Instance()->OpenFile(Analysis::Instance()->getFilename());
 	if (!IsMaster()) //it is a slave, do nothing else
 	{
-		//Analysis::Instance()->PrepareNewRun(aRun);
 
 		G4cout << "ooo Run " << aRun->GetRunID() << " starts on slave." << G4endl;
 		return;

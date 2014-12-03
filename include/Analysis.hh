@@ -58,6 +58,16 @@ public:
 	virtual G4bool OpenFile(const G4String &fileName);
 	virtual G4bool Write();
 	virtual G4bool CloseFile();
+/*
+	virtual G4int CreateNtuple(const G4String &name,const G4String &title);
+	virtual G4int CreateNtupleIColumn(G4int,const G4String &);
+	virtual G4int CreateNtupleFColumn(G4int,const G4String&);
+	virtual void FinishNtuple(G4int nTupleId);
+
+	virtual G4bool FillNtupleFColumn(G4int ntupleId, G4int columnId, G4float value);
+	virtual G4bool FillNtupleIColumn(G4int ntupleId, G4int columnId, G4int value);
+	virtual G4bool AddNtupleRow(G4int ntupleId);
+*/
 	void AddAuxiliary(G4String name, G4String value);
 
 	const std::string& getFilename() const {
