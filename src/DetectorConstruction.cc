@@ -69,6 +69,7 @@ lblue(153/255., 153/255., 255/255.),
 lgreen(153/255. ,255/255. ,153/255.);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+<<<<<<< HEAD
 DetectorConstruction* DetectorConstruction::Instance(){
 	return fgInstance;
 }
@@ -84,16 +85,53 @@ DetectorConstruction::DetectorConstruction()
 	myDetector=0;
 	scorer=0;
 	fgInstance=this;}
+=======
+// Visualization attributes
+static G4Color
+red(1.0,0.0,0.0),
+yellow(1.0,1.0,0.0),
+green(0.0,1.0,0.0),
+blue(0.0,0.0,1.0),
+brown(0.4,0.4,0.1),
+white(1.0,1.0,1.0),
+metal(204/255., 204/255, 255/255.),
+lblue(153/255., 153/255., 255/255.),
+lgreen(153/255. ,255/255. ,153/255.);
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+DetectorConstruction::DetectorConstruction()
+:physiWorld(0),G4VUserDetectorConstruction()
+{
+	dcMessenger=new DetectorMessenger(this);
+	fPMTAngle=180*deg;
+	fOpeningAngle=2.5*deg;
+	source_sizeXY=5*mm;
+	source_sizeZ=5*mm;
+	myDetector=0;
+}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()
-{ fgInstance = 0;}
+{
+}
 
+void DetectorConstruction::UpdateGeometry()
+{
+	G4cout <<"Updating Geometry...";
+	G4GeometryManager::GetInstance()->OpenGeometry();
+	G4PhysicalVolumeStore::GetInstance()->Clean();
+	G4LogicalVolumeStore::GetInstance()->Clean();
+	G4SolidStore::GetInstance()->Clean();
+	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+	G4RunManager::GetRunManager()->GeometryHasBeenModified();
+	G4cout<<"done!"<<G4endl;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
+
 	// Get nist material manager
 	G4NistManager* nist = G4NistManager::Instance();
 	// Option to switch on/off checking of volumes overlaps
@@ -117,7 +155,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 					world_mat,           //its material
 					"World");            //its name
 
-	G4VPhysicalVolume* physWorld =
+	logicWorld->SetVisAttributes(new G4VisAttributes(G4VisAttributes::Invisible));
+	physiWorld =
 			new G4PVPlacement(0,                     //no rotation
 					G4ThreeVector(),       //at (0,0,0)
 					logicWorld,            //its logical volume
@@ -136,6 +175,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4Box* sourcehull_solid=new G4Box("SourceHull",source_sizeXY/2+.5*mm,source_sizeXY/2+.5*mm,source_sizeZ/2+.5*mm);
 	G4LogicalVolume* sourcehull_logical=new G4LogicalVolume(sourcehull_solid,nist->FindOrBuildMaterial("G4_Al"),"Source");
 	new G4PVPlacement(0,G4ThreeVector(0,0,source_sizeZ/2+0.5*mm),sourcehull_logical,"Source",logicWorld,false,0,checkOverlaps);
+
 
 	G4Box* source_solid=new G4Box("Source",source_sizeXY/2,source_sizeXY/2,source_sizeZ/2);
 	G4LogicalVolume* source_logical=new G4LogicalVolume(source_solid,nist->FindOrBuildMaterial("G4_Na"),"Source");
@@ -187,7 +227,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 	G4double shield_thick=1*mm;
 	G4Tubs* shield_solid=new G4Tubs("Scintillator",0*mm,scint_radius,scint_length/2,0*deg,360*deg);
-	G4LogicalVolume* shield_logical=new G4LogicalVolume(shield_solid,nist->FindOrBuildMaterial("G4_Al"),"Scintillator");
+	G4LogicalVolume* shield_logical=new G4LogicalVolume(shield_solid,nist->FindOrBuildMaterial("G4_Al"),"ScintillatorShielding");
+
 	new G4PVPlacement(scint_rotation1,G4ThreeVector(scint_length/2+75*mm,0,0),shield_logical,"ScintillatorShielding",logicWorld,false,0,checkOverlaps);
 	new G4PVPlacement(scint_rotation2,G4ThreeVector(scint_length/2+75*mm,0,0).rotateZ(fPMTAngle),shield_logical,"ScintillatorShielding",logicWorld,false,1,checkOverlaps);
 
@@ -210,64 +251,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4VisAttributes* CollVisAttr=new G4VisAttributes(metal);
 	coll_logical->SetVisAttributes(CollVisAttr);
 
+	return physiWorld;
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::ConstructSDandField() {
+	//------------------------------------------------
+	// Sensitive detectors
+	//------------------------------------------------
 
-	// Get pointer to detector manager
-
-	G4SDManager* manager = G4SDManager::GetSDMpointer();
-
-
-	// Create a new sensitive detector named "MyDetector"
 	if(myDetector)
 		delete myDetector;
-	myDetector =
-
-			new G4MultiFunctionalDetector("MyDetector");
-
-
-
-
-	// Register detector with manager
-
-	manager->AddNewDetector(myDetector);
-
-
-
-	// Attach detector to scoring volume
-
-	scint_logical->SetSensitiveDetector(myDetector);
-
-
-
-	// Create a primitive Scorer named myScorer
-	if(scorer)
-		delete scorer;
-	scorer = new G4PSEnergyDeposit("eDep",1);
-	myDetector->RegisterPrimitive(scorer);
-
-
-
-	G4cout<<"Created G4MultiFunctionalDetector named "
-
-			<<myDetector->GetName()<<", and a G4PSSphereSurfaceCurrent scorer "
-
-			<<"named "<<scorer->GetName()<<G4endl;
-
-
-	//
-	//always return the physical World
-	//
-	return physWorld;
+	myDetector = new CaloSensitiveDetector("PMT");
+	SetSensitiveDetector("Scintillator",myDetector);
 }
 
-void DetectorConstruction::UpdateGeometry(){
-	G4cout <<"Updating Geometry...";
-	G4GeometryManager::GetInstance()->OpenGeometry();
-	G4PhysicalVolumeStore::GetInstance()->Clean();
-	G4LogicalVolumeStore::GetInstance()->Clean();
-	G4SolidStore::GetInstance()->Clean();
-	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-	G4RunManager::GetRunManager()->GeometryHasBeenModified();
-	G4cout<<"done!"<<G4endl;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

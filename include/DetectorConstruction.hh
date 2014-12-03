@@ -33,40 +33,52 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+<<<<<<< HEAD
 
 
+=======
+#include <map>
+#include <string>
+#include "G4ThreeVector.hh"
+class TrackerSensitiveDetector;
+class CaloSensitiveDetector;
+class G4Box;
+class G4LogicalVolume;
 class G4VPhysicalVolume;
 class DetectorMessenger;
-class G4MultiFunctionalDetector;
-class G4PSEnergyDeposit;
-/// Detector construction class to define materials and geometry.
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-	static DetectorConstruction* Instance();
     DetectorConstruction();
     virtual ~DetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
 
-    void SetPMTAngle(G4double xAngle){fPMTAngle=xAngle;};
-    void SetOpeningAngle(G4double xAngle){fOpeningAngle=xAngle;};
+	virtual ~DetectorConstruction();
+	virtual G4VPhysicalVolume* Construct();
+	virtual void ConstructSDandField();
 
-    G4double GetSource_SizeXY(){return source_sizeXY;};
-    G4double GetSource_SizeZ(){return source_sizeZ;};
-    void UpdateGeometry();
 
-  private:
-    static DetectorConstruction* fgInstance;
-    void DefineScorers();
-    DetectorMessenger* dcMessenger;
-    G4double fPMTAngle;
-    G4double fOpeningAngle;
-    G4double source_sizeXY;
-    G4double source_sizeZ;
-    G4MultiFunctionalDetector* myDetector;
-    G4PSEnergyDeposit* scorer;
+	void SetPMTAngle(G4double xAngle){fPMTAngle=xAngle;};
+	void SetOpeningAngle(G4double xAngle){fOpeningAngle=xAngle;};
 
+
+	G4double GetSource_SizeXY(){return source_sizeXY;};
+	G4double GetSource_SizeZ(){return source_sizeZ;};
+
+	void UpdateGeometry();
+
+private:
+
+	
+	G4VPhysicalVolume* physiWorld;
+	DetectorMessenger* dcMessenger;
+
+	G4double fPMTAngle;
+	G4double fOpeningAngle;
+	G4double source_sizeXY;
+	G4double source_sizeZ;
+	CaloSensitiveDetector* myDetector;
 
 };
 
