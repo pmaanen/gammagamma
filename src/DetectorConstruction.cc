@@ -45,12 +45,9 @@
 #include "G4ThreeVector.hh"
 #include "G4VisAttributes.hh"
 #include "G4SDManager.hh"
-#include "G4MultiFunctionalDetector.hh"
-#include "G4VPrimitiveScorer.hh"
-#include "G4PSEnergyDeposit.hh"
 #include "G4SubtractionSolid.hh"
 #include "DetectorMessenger.hh"
-
+#include "CaloSensitiveDetector.hh"
 
 #include "G4GeometryManager.hh"
 #include "G4PhysicalVolumeStore.hh"
@@ -69,11 +66,6 @@ lblue(153/255., 153/255., 255/255.),
 lgreen(153/255. ,255/255. ,153/255.);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-<<<<<<< HEAD
-DetectorConstruction* DetectorConstruction::Instance(){
-	return fgInstance;
-}
-DetectorConstruction* DetectorConstruction::fgInstance=0;
 DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction()
 {
@@ -82,34 +74,7 @@ DetectorConstruction::DetectorConstruction()
 	fOpeningAngle=0*deg;
 	source_sizeXY=5*mm;
 	source_sizeZ=5*mm;
-	myDetector=0;
-	scorer=0;
-	fgInstance=this;}
-=======
-// Visualization attributes
-static G4Color
-red(1.0,0.0,0.0),
-yellow(1.0,1.0,0.0),
-green(0.0,1.0,0.0),
-blue(0.0,0.0,1.0),
-brown(0.4,0.4,0.1),
-white(1.0,1.0,1.0),
-metal(204/255., 204/255, 255/255.),
-lblue(153/255., 153/255., 255/255.),
-lgreen(153/255. ,255/255. ,153/255.);
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-DetectorConstruction::DetectorConstruction()
-:physiWorld(0),G4VUserDetectorConstruction()
-{
-	dcMessenger=new DetectorMessenger(this);
-	fPMTAngle=180*deg;
-	fOpeningAngle=2.5*deg;
-	source_sizeXY=5*mm;
-	source_sizeZ=5*mm;
-	myDetector=0;
-}
-
-
+	myDetector=0;}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()

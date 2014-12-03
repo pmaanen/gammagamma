@@ -33,10 +33,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
-<<<<<<< HEAD
 
-
-=======
 #include <map>
 #include <string>
 #include "G4ThreeVector.hh"
@@ -49,37 +46,34 @@ class DetectorMessenger;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  public:
-    DetectorConstruction();
-    virtual ~DetectorConstruction();
-    virtual G4VPhysicalVolume* Construct();
+public:
+  DetectorConstruction();
+  virtual ~DetectorConstruction();
+  virtual G4VPhysicalVolume* Construct();
+ 
+  virtual void ConstructSDandField();
 
-	virtual ~DetectorConstruction();
-	virtual G4VPhysicalVolume* Construct();
-	virtual void ConstructSDandField();
-
-
-	void SetPMTAngle(G4double xAngle){fPMTAngle=xAngle;};
-	void SetOpeningAngle(G4double xAngle){fOpeningAngle=xAngle;};
-
-
-	G4double GetSource_SizeXY(){return source_sizeXY;};
-	G4double GetSource_SizeZ(){return source_sizeZ;};
-
-	void UpdateGeometry();
+  void SetPMTAngle(G4double xAngle){fPMTAngle=xAngle;};
+  void SetOpeningAngle(G4double xAngle){fOpeningAngle=xAngle;};
+  
+  
+  G4double GetSource_SizeXY(){return source_sizeXY;};
+  G4double GetSource_SizeZ(){return source_sizeZ;};
+  
+  void UpdateGeometry();
 
 private:
 
-	
-	G4VPhysicalVolume* physiWorld;
-	DetectorMessenger* dcMessenger;
-
-	G4double fPMTAngle;
-	G4double fOpeningAngle;
-	G4double source_sizeXY;
-	G4double source_sizeZ;
-	CaloSensitiveDetector* myDetector;
-
+  
+  G4VPhysicalVolume* physiWorld;
+  DetectorMessenger* dcMessenger;
+  
+  G4double fPMTAngle;
+  G4double fOpeningAngle;
+  G4double source_sizeXY;
+  G4double source_sizeZ;
+  CaloSensitiveDetector* myDetector;
+  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

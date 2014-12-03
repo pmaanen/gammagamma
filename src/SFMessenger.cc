@@ -33,7 +33,7 @@ void SFMessenger::SetNewValue(G4UIcommand *cmd, G4String g4String)
 		myGenerator->setMode(((G4UIcmdWithAnInteger*)cmd)->GetNewIntValue(g4String));
 	}
 	if(cmd==fileCmd){
-		myGenerator->setInfile(g4String);
+	  //myGenerator->setInfile(g4String);
 	}
 }
 
