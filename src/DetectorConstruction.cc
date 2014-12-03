@@ -1,17 +1,3 @@
-// ********************************************************************
-// *                                                                  *
-// *                          EDM Polarimetry                         *
-// *                                                                  *
-// * Detector physics                                                 *
-// * RWTH Aachen 24.10.2012                                           *
-// * Fabian Hinder                                                    *
-// ********************************************************************
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
-
 #include "DetectorConstruction.hh"
 
 //***** include basic geometry classes
@@ -237,15 +223,9 @@ void DetectorConstruction::ConstructSDandField() {
 	//------------------------------------------------
 	// Sensitive detectors
 	//------------------------------------------------
-
-	// Get pointer to detector manager
-
-	G4SDManager* manager = G4SDManager::GetSDMpointer();
-
-
 	// Create a new sensitive detector
 	if(myDetector)
 		delete myDetector;
 	myDetector = new CaloSensitiveDetector("PMT");
-	SetSensitiveDetector("Scintillator",myDetector);
+	//SetSensitiveDetector("Scintillator",myDetector);
 }
