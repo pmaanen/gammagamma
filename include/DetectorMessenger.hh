@@ -13,8 +13,7 @@
 
 class DetectorConstruction;
 class G4UIdirectory;
-class G4UIcmdWithAString;
-class G4UIcmdWith3VectorAndUnit;
+class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithoutParameter;
 
 class DetectorMessenger:public G4UImessenger {
@@ -27,8 +26,9 @@ private:
 
 	DetectorConstruction* dc;
 	G4UIdirectory* dcDir;
+	G4UIcmdWithADoubleAndUnit* OpeningAngleCmd;
+	G4UIcmdWithADoubleAndUnit* PMTAngleCmd;
 	G4UIcmdWithoutParameter* updateCmd;
-	G4UIcmdWithAString* writeCmd;
 };
 
 #endif /* DETECTORMESSENGER_HH_ */

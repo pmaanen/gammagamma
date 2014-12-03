@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(polarimeterStudies)
+project(gammagamma)
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
@@ -69,13 +69,13 @@ SET(Analysis_SRCS ${Analysis_DICT})
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(polarimeterstudies main.cc ${sources} ${headers})
-target_link_libraries(polarimeterstudies ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(gammagamma main.cc ${sources} ${headers})
+target_link_libraries(gammagamma ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES})
 
-add_library(Analysis SHARED ${Analysis_DICT} ${PROJECT_SOURCE_DIR}/src/DetId.cc)
-target_link_libraries(Analysis ${ROOT_LIBRARIES})
+#add_library(Analysis SHARED ${Analysis_DICT} ${PROJECT_SOURCE_DIR}/src/DetId.cc)
+#target_link_libraries(Analysis ${ROOT_LIBRARIES})
 
-add_dependencies(polarimeterstudies Analysis)
+#add_dependencies(polarimeterstudies Analysis)
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build gammagamma. This is so that we can run the executable directly because it
@@ -118,4 +118,4 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS polarimeterstudies DESTINATION bin)
+install(TARGETS gammagamma DESTINATION bin)

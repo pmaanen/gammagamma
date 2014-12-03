@@ -18,11 +18,8 @@
 #include <map>
 #include <string>
 #include "G4ThreeVector.hh"
-#include "G4GDMLParser.hh"
-class SensitiveDetector;
 class TrackerSensitiveDetector;
-class G4MultiFunctionalDetector;
-class G4VPrimitiveScorer;
+class CaloSensitiveDetector;
 class G4Box;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -35,18 +32,37 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 	DetectorConstruction();
-	~DetectorConstruction();
 
-	G4VPhysicalVolume* Construct();
+	virtual ~DetectorConstruction();
+	virtual G4VPhysicalVolume* Construct();
 	void ConstructSDandField();
 
-	void WriteWorldToFile(G4String filename);
+
+	void SetPMTAngle(G4double xAngle){fPMTAngle=xAngle;};
+	void SetOpeningAngle(G4double xAngle){fOpeningAngle=xAngle;};
+
+
+	G4double GetSource_SizeXY(){return source_sizeXY;};
+	G4double GetSource_SizeZ(){return source_sizeZ;};
+
 	void UpdateGeometry();
+
 private:
-	G4GDMLParser parser;
+
+	void DefineScorers();
+
 	G4VPhysicalVolume* physiWorld;
 	DetectorMessenger* dcMessenger;
-	G4String geomfile;
+
+	G4double fPMTAngle;
+	G4double fOpeningAngle;
+	G4double source_sizeXY;
+	G4double source_sizeZ;
+	CaloSensitiveDetector* myDetector;
+
+
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
