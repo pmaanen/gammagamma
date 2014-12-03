@@ -248,8 +248,4 @@ void DetectorConstruction::ConstructSDandField() {
 		delete myDetector;
 	myDetector = new CaloSensitiveDetector("PMT");
 	SetSensitiveDetector("Scintillator",myDetector);
-
-	// Register detector with manager
-
-	manager->AddNewDetector(myDetector);
 }
