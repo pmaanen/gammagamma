@@ -86,13 +86,18 @@ DetectorConstruction::~DetectorConstruction()
 void DetectorConstruction::UpdateGeometry()
 {
 	G4cout <<"Updating Geometry...";
+	G4RunManager::GetRunManager()->ReinitializeGeometry();
+	G4cout<<"done!"<<G4endl;
+	return;
+	/*
 	G4GeometryManager::GetInstance()->OpenGeometry();
 	G4PhysicalVolumeStore::GetInstance()->Clean();
 	G4LogicalVolumeStore::GetInstance()->Clean();
 	G4SolidStore::GetInstance()->Clean();
 	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
 	G4RunManager::GetRunManager()->GeometryHasBeenModified();
-	G4cout<<"done!"<<G4endl;
+	*/
+
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -225,10 +230,8 @@ void DetectorConstruction::ConstructSDandField() {
 	//------------------------------------------------
 	// Sensitive detectors
 	//------------------------------------------------
-
-	if(myDetector)
-		delete myDetector;
-	myDetector = new CaloSensitiveDetector("PMT");
-	SetSensitiveDetector(logicScintillator,myDetector);
+  		myDetector = new CaloSensitiveDetector("PMT");
+		SetSensitiveDetector(logicScintillator,myDetector);
+  
 }
 

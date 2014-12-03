@@ -13,6 +13,7 @@
 class CaloSensitiveDetector: public G4MultiFunctionalDetector {
 public:
 	CaloSensitiveDetector(G4String name);
+	virtual ~CaloSensitiveDetector();
 	virtual void EndOfEvent(G4HCofThisEvent* HC);
 	virtual void Initialize(G4HCofThisEvent* HC);
 private:
