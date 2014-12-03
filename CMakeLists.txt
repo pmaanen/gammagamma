@@ -57,14 +57,14 @@ set (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO}
 #----------------------------------------------------------------------------
 # set everything needed for the root dictonary and create the
 # dictionary
-set(Analysis_HEADERS ${PROJECT_SOURCE_DIR}/include/hit.hh ${PROJECT_SOURCE_DIR}/include/DetId.hh)
-set(Analysis_LINKDEF ${PROJECT_SOURCE_DIR}/include/AnalysisLinkDef.hh )
-set(Analysis_DICT ${CMAKE_BINARY_DIR}/AnalysisDict)
+#set(Analysis_HEADERS ${PROJECT_SOURCE_DIR}/include/hit.hh ${PROJECT_SOURCE_DIR}/include/DetId.hh)
+#set(Analysis_LINKDEF ${PROJECT_SOURCE_DIR}/include/AnalysisLinkDef.hh )
+#set(Analysis_DICT ${CMAKE_BINARY_DIR}/AnalysisDict)
 
-ROOT_GENERATE_DICTIONARY(${Analysis_DICT} ${Analysis_HEADERS} LINKDEF ${PROJECT_SOURCE_DIR}/include/AnalysisLinkDef.hh)
+#ROOT_GENERATE_DICTIONARY(${Analysis_DICT} ${Analysis_HEADERS} LINKDEF ${PROJECT_SOURCE_DIR}/include/AnalysisLinkDef.hh)
 # add the dictionary to the list of source files
-SET(sources ${sources} ${Analysis_DICT})
-SET(Analysis_SRCS ${Analysis_DICT})
+#SET(sources ${sources} ${Analysis_DICT})
+#SET(Analysis_SRCS ${Analysis_DICT})
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
@@ -99,13 +99,6 @@ foreach(_script ${polarimeter_SCRIPTS})
 endforeach()
 
 set(geometry_FILES
-	lysocal.gdml
-	lyso.gdml
-	empty.gdml
-	default.gdml
-	hexagon.gdml
-	CopyNoExtension.xsd
-	quadrat.gdml
 )
 foreach(_script ${geometry_FILES})
 	configure_file(
