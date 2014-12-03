@@ -67,14 +67,15 @@ lgreen(153/255. ,255/255. ,153/255.);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 DetectorConstruction::DetectorConstruction()
-: G4VUserDetectorConstruction()
+:physiWorld(0),G4VUserDetectorConstruction()
 {
 	dcMessenger=new DetectorMessenger(this);
-	fPMTAngle=0*deg;
-	fOpeningAngle=0*deg;
+	fPMTAngle=180*deg;
+	fOpeningAngle=2.5*deg;
 	source_sizeXY=5*mm;
 	source_sizeZ=5*mm;
-	myDetector=0;}
+	myDetector=0;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()

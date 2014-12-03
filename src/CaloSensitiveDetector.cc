@@ -49,5 +49,6 @@ void CaloSensitiveDetector::EndOfEvent(G4HCofThisEvent* HC) {
 }
 
 void CaloSensitiveDetector::Initialize(G4HCofThisEvent* HC) {
-	G4MultiFunctionalDetector::Initialize(HC);
+	G4cout<<"CaloSensitiveDetector::Initialize() "<<this->GetName()<<G4endl;
+	//G4MultiFunctionalDetector::Initialize(HC);
 }
