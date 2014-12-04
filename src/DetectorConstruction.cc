@@ -29,7 +29,7 @@
 /// \brief Implementation of the DetectorConstruction class
 
 #include "DetectorConstruction.hh"
-
+#include "G4GenericMessenger.hh"
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
@@ -69,13 +69,14 @@ lgreen(153/255. ,255/255. ,153/255.);
 DetectorConstruction::DetectorConstruction()
 :physiWorld(0),G4VUserDetectorConstruction()
 {
-	dcMessenger=new DetectorMessenger(this);
 	fPMTAngle=180*deg;
 	logicScintillator=0;
 	fOpeningAngle=2.5*deg;
 	source_sizeXY=5*mm;
 	source_sizeZ=5*mm;
 	myDetector=0;
+
+	DefineCommands();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -89,14 +90,6 @@ void DetectorConstruction::UpdateGeometry()
 	G4RunManager::GetRunManager()->ReinitializeGeometry();
 	G4cout<<"done!"<<G4endl;
 	return;
-	/*
-	G4GeometryManager::GetInstance()->OpenGeometry();
-	G4PhysicalVolumeStore::GetInstance()->Clean();
-	G4LogicalVolumeStore::GetInstance()->Clean();
-	G4SolidStore::GetInstance()->Clean();
-	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-	G4RunManager::GetRunManager()->GeometryHasBeenModified();
-	*/
 
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -230,8 +223,40 @@ void DetectorConstruction::ConstructSDandField() {
 	//------------------------------------------------
 	// Sensitive detectors
 	//------------------------------------------------
-  		myDetector = new CaloSensitiveDetector("PMT");
-		SetSensitiveDetector(logicScintillator,myDetector);
-  
+	myDetector = new CaloSensitiveDetector("PMT");
+	SetSensitiveDetector(logicScintillator,myDetector);
+
+
 }
 
+void DetectorConstruction::DefineCommands() {
+
+	// Define /GammaGamma/detector command directory using generic messenger class
+	fMessenger = new G4GenericMessenger(this,
+			"/GammaGamma/detector/",
+			"Detector control");
+
+	G4GenericMessenger::Command& PMTAngleCmd
+	= fMessenger->DeclareMethodWithUnit("PMTAngle","deg",
+			&DetectorConstruction::SetPMTAngle,
+			"Set rotation angle of the second PMT.");
+	PMTAngleCmd.SetParameterName("alpha", true);
+	PMTAngleCmd.SetRange("alpha>=0. && alpha<=180.");
+	PMTAngleCmd.SetDefaultValue("180.");
+
+	G4GenericMessenger::Command& OpeningAngleCmd
+	= fMessenger->DeclareMethodWithUnit("CollimatorAngle","deg",
+			&DetectorConstruction::SetOpeningAngle,
+			"Set opening angle of collimators");
+	OpeningAngleCmd.SetParameterName("beta", true);
+	OpeningAngleCmd.SetRange("beta>=0. && beta<=90.");
+	OpeningAngleCmd.SetDefaultValue("5.");
+
+	G4GenericMessenger::Command& updateCmd
+	= fMessenger->DeclareMethod("update",
+			&DetectorConstruction::UpdateGeometry,
+			"Update geometry");
+	updateCmd;
+
+	return;
+}

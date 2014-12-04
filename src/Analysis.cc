@@ -74,7 +74,7 @@ void Analysis::PrepareNewRun(const G4Run* aRun=0)
 	if(_path.length()>0 and _path.compare(_path.length()-1,1,"/")!=0){
 		_path+="/";
 	}
-
+	fname<<_path;
 
 	//Check if basename is set by user, if not add standard name
 	if(_basename.compare("")==0){
@@ -87,8 +87,6 @@ void Analysis::PrepareNewRun(const G4Run* aRun=0)
 	if(_basename.length()>4 and _basename.compare(_basename.length()-5,5,".root")!=0){
 				fname<<".root";
 			}
-
-
 
 	if(_oldname.compare(fname.str())==0){
 		std::stringstream message;

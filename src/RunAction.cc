@@ -9,13 +9,10 @@
 
 #include "RunAction.hh"
 #include "G4Run.hh"
-#include "G4UImanager.hh"
-#include "G4VVisManager.hh"
 #include "G4ios.hh"
 #include "Analysis.hh"
 #include "Randomize.hh"
 #include <ctime>
-#include "Run.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -96,8 +93,4 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 		G4Random::saveEngineStatus("endOfRun.rndm");
 	return;
 
-}
-
-G4Run* RunAction::GenerateRun() {
-	return (new Run());
 }

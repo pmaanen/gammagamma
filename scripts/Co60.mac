@@ -1,0 +1,7 @@
+/analysis/Enable
+/gun/position 0 0 0
+/gun/direction 0 0 1
+/gun/energy 0
+/gun/particle ion
+/gun/ion 27 60
+/control/loop scripts/singleCo60.mac angle 90 270 2

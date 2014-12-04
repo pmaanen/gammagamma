@@ -1,12 +1,17 @@
+
+
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #else
 #include "G4RunManager.hh"
 #endif
+
 #include "G4UImanager.hh"
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
+//#include "G4UIterminal.hh"
+
+#include "DetectorConstruction.hh"
 #include "UserActionInitialization.hh"
+
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
 #endif
@@ -14,12 +19,6 @@
 #ifdef G4UI_USE
 #include "G4UIExecutive.hh"
 #endif
-
-#include "DetectorConstruction.hh"
-#include <QGSP_BIC.hh>
-#include "G4OpticalPhysics.hh"
-#include "SFEventGenerator.hh"
-#include "Analysis.hh"
 
 #include "FTFP_BERT.hh"
 #include "G4RadioactiveDecayPhysics.hh"
@@ -88,15 +87,16 @@ int main(int argc,char** argv) {
 	runManager->Initialize();
 
 #ifdef G4VIS_USE
-	// Visualization manager
-	//
+	// Initialize visualization
 	G4VisManager* visManager = new G4VisExecutive;
+	// G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
+	// G4VisManager* visManager = new G4VisExecutive("Quiet");
 	visManager->Initialize();
 #endif
 
 	// Get the pointer to the User Interface manager
 	//
-	G4UImanager* UImanager = G4UImanager::GetMasterUIpointer();
+	G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
 
 

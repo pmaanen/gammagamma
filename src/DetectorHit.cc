@@ -94,7 +94,9 @@ G4int DetectorHit::operator==(const DetectorHit& right) const
 
 void DetectorHit::Draw()
 {
-	G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
+	//G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
+	return;
+	/*
 	if(pVVisManager)
 	{
 		G4Circle circle(fTruePos);
@@ -105,6 +107,7 @@ void DetectorHit::Draw()
 		circle.SetVisAttributes(attribs);
 		pVVisManager->Draw(circle);
 	}
+	*/
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

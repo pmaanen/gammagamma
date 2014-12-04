@@ -9,18 +9,10 @@
 #
 /vis/scene/create
 /vis/open OGLS
-#/vis/viewer/set/style solid
+/vis/viewer/set/style s
 /vis/viewer/set/viewpointThetaPhi 90 0
 /vis/viewer/zoom 10
 /vis/drawVolume 
-/vis/scene/add/axes 0 -1.5 0 3 cm
-# global
-/vis/viewer/set/culling  global  true
-# invisible
-/vis/viewer/set/culling  invisible  true
-/vis/heprep/setCullInvisibles true
-/vis/viewer/set/hiddenEdge 1
-/vis/viewer/set/hiddenMarker 1
 /vis/scene/add/trajectories
 /vis/scene/add/hits
 ############## for test 
@@ -29,6 +21,5 @@
 #/gun/particle proton
 #/gun/energy 232 MeV
 ################################
-/tracking/storeTrajectory 1
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/scene/endOfEventAction accumulate 1
-/vis/viewer/flush
