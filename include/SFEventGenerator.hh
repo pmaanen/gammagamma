@@ -19,7 +19,7 @@
 #include <G4LorentzVector.hh>
 #include <G4PrimaryVertex.hh>
 #include <G4ThreeVector.hh>
-
+#include "G4GenericMessenger.hh"
 #include <G4Proton.hh>
 #include <G4Deuteron.hh>
 #include <G4ChargedGeantino.hh>
@@ -27,7 +27,6 @@
 
 #include <TH1.h>
 #include <TH2.h>
-#include "SFMessenger.hh"
 class G4GeneralParticleSource;
 class SFEventGenerator : public G4VUserPrimaryGeneratorAction {
 
@@ -46,9 +45,11 @@ public:
 
   G4ParticleGun* getPGun() const{return _pGun;};
 private:
+  void DefineCommands();
   G4ParticleGun			*_pGun ;
   GeneratorMode			_mode;
-  SFMessenger*			_messenger;
+  G4GenericMessenger*			fMessenger;
+
       
 
 protected:

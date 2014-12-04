@@ -46,7 +46,6 @@
 #include "G4VisAttributes.hh"
 #include "G4SDManager.hh"
 #include "G4SubtractionSolid.hh"
-#include "DetectorMessenger.hh"
 #include "CaloSensitiveDetector.hh"
 
 #include "G4GeometryManager.hh"

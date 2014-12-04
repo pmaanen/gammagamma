@@ -21,7 +21,7 @@ SFEventGenerator::SFEventGenerator(){
 	_mode=GUN;
 	G4int Nparticle = 1 ;
 	_pGun = new G4ParticleGun(1) ;
-	_messenger=new SFMessenger(this);
+	DefineCommands();
 }
 
 SFEventGenerator::~SFEventGenerator() {
@@ -98,6 +98,23 @@ void SFEventGenerator::GeneratePrimaries(G4Event* E) {
 	}
 }
 
+
+void SFEventGenerator::DefineCommands()
+{
+	fMessenger = new G4GenericMessenger(this,
+				"/GammaGamma/generator/",
+				"Generator control");
+
+	G4GenericMessenger::Command& modeCmd
+	= fMessenger->DeclareMethod("Mode",
+			&SFEventGenerator::setMode,
+			"Set mode of generator.");
+	modeCmd.SetParameterName("mode", true);
+//	modeCmd.SetRange("mode>=1. && mode<=2.");
+	modeCmd.SetDefaultValue("1");
+
+
+}
 
 
 // eof
