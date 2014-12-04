@@ -41,8 +41,9 @@ public:
   void GeneratePrimaries(G4Event* E);
   void generateEventFromDecay(G4Event* E);
   void generateEventFromGun(G4Event* E);
-  G4int getMode() const;
-  void setMode(G4int mode){_mode=mode};
+  G4int getMode() const { return _mode;}
+  void setMode(G4int mode){_mode=static_cast<GeneratorMode>(mode);}
+
   G4ParticleGun* getPGun() const{return _pGun;};
 private:
   G4ParticleGun			*_pGun ;

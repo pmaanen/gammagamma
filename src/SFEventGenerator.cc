@@ -28,12 +28,6 @@ SFEventGenerator::~SFEventGenerator() {
 	delete _pGun ;
 }
 
-int SFEventGenerator::getMode() const
-{
-	return _mode;
-}
-
-
 void SFEventGenerator::generateEventFromGun(G4Event *E)
 {
 	_pGun->GeneratePrimaryVertex(E) ;
@@ -86,19 +80,6 @@ G4LogicalVolume* envLV
 
 	return;
 }
-
-void SFEventGenerator::setMode(G4int mode)
-{
-	this->_mode = static_cast<GeneratorMode>(mode);
-	if(!(_mode==GUN or _mode==ION)){
-		std::stringstream o;
-		o<<"Mode not recognized. Mode: "<<_mode<<G4endl;
-		G4Exception("SFEventGenerator::SetMode()", "ArgumentError", JustWarning,
-				o.str().c_str());
-	}
-}
-
-
 
 void SFEventGenerator::GeneratePrimaries(G4Event* E) {
 

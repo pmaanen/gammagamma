@@ -37,7 +37,6 @@
 #include "G4ios.hh"
 #include "Randomize.hh"
 #include "Analysis.hh"
-#include "EventAction.hh"
 #include "TNtuple.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 using namespace CLHEP;

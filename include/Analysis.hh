@@ -11,10 +11,8 @@
 #include "TString.h"
 #include <map>
 #include <fstream>
-#include "hit.hh"
 #include "TFile.h"
 #include <sstream>
-#include "G4Exception.hh"
 #include "G4RootAnalysisManager.hh"
 #include "G4Threading.hh"
 class DetectorConstruction;
@@ -93,7 +91,7 @@ public:
 		return (T*)_objects[t->GetName()];
 	}
 
-
+/*
 	//Get an object from storage.
 	//Throws if object is not typed correctly or does not exist.
 	template<typename T>
@@ -116,7 +114,7 @@ public:
 		}
 		return retval;
 	}
-
+*/
 private:
 	//! Private constructor: part of singleton pattern
 	Analysis(G4bool isMaster=true);

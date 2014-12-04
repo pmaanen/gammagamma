@@ -16,7 +16,6 @@
 #endif
 
 #include "DetectorConstruction.hh"
-#include "EventAction.hh"
 #include <QGSP_BIC.hh>
 #include "G4OpticalPhysics.hh"
 #include "SFEventGenerator.hh"

@@ -8,7 +8,6 @@
 #include <CaloSensitiveDetector.hh>
 #include "G4String.hh"
 #include "Analysis.hh"
-#include "G4Exception.hh"
 #include "TNtuple.h"
 #include "G4EventManager.hh"
 #include "G4VPrimitiveScorer.hh"
@@ -40,8 +39,7 @@ void CaloSensitiveDetector::EndOfEvent(G4HCofThisEvent* HC) {
 				an->AddNtupleRow(myTupleId[0]);
 			}
 
-			catch(myG4Exception& exc){
-				G4cout <<exc.getExceptionCode()<<" catched in hit loop"<<G4endl;
+			catch(...){
 				continue;
 			}
 		}

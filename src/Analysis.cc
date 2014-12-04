@@ -26,7 +26,6 @@
 #include "Math/Vector3D.h"
 #include "tools/wroot/file"
 #include <algorithm>
-#include "hit.hh"
 //
 
 
